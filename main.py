@@ -2,6 +2,9 @@
 # - Fixed coupon = Fixed rate of interest
 # - Note = This product is packaged with bonds
 
+## There are a few things I want to be clear:
+## This FCN has a knock out & knock in barrier, but no call/ put parities 
+
 ''' 
 FCN is also known as FCCN
 
@@ -53,16 +56,34 @@ df.reset_index(inplace = True)
 
 #Function works! 
 # Function will find the next trading day that is returned in the dataframe
-def next_trade_date(start_date, add, df):
+# def next_trade_date(start_date, add, df):
+#     import pandas as pd
+#     import datetime as datetime
+#     end_date = pd.to_datetime(start_date) + datetime.timedelta(days = int(add))
+#     if (end_date in list(df.Date)):
+#         # print("YES")
+#         return end_date
+#     while (end_date not in list(df.Date)):
+#         end_date += datetime.timedelta(days = int(add))
+#     return end_date
+
+def start_trade_date(start_date, df):
     import pandas as pd
     import datetime as datetime
-    end_date = pd.to_datetime(start_date) + datetime.timedelta(days = int(add))
-    if (end_date in list(df.Date)):
-        # print("YES")
-        return end_date
-    while (end_date not in list(df.Date)):
-        end_date += datetime.timedelta(days = int(add))
-    return end_date
+    temp_date = pd.to_datetime(start_date)
+    if temp_date in list(df.Date):
+        return temp_date
+    else:
+        while (temp_date not in list(df.Date)):
+            print(f"You cannot trade on {temp_date.date()} since it's a holiday")
+            temp_date += datetime.timedelta(days = 1)
+        return temp_date
+
+
+# def end_trade_date (start_date, add, df):
+#     import pandas as pd
+#     return pass 
 
 print(df.Date)
-print(next_trade_date("2018-01-05", 1, df))
+print(start_trade_date("2018-01-06", df))
+

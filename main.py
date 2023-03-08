@@ -51,6 +51,7 @@ data = yf.download(tickers_list, start = start_interval,end = end_interval)
 
 df = data["Close"]
 df.reset_index(inplace = True)
+df.index += 1 # Forces the index to start from `1`
 # print(df.info(verbose = True))
 
 
@@ -67,23 +68,26 @@ df.reset_index(inplace = True)
 #         end_date += datetime.timedelta(days = int(add))
 #     return end_date
 
-def start_trade_date(start_date, df):
+#Both start and end trade dates will start here
+def trade_date(given_date, df):
     import pandas as pd
     import datetime as datetime
-    temp_date = pd.to_datetime(start_date)
+    temp_date = pd.to_datetime(given_date)
     if temp_date in list(df.Date):
         return temp_date
     else:
         while (temp_date not in list(df.Date)):
-            print(f"You cannot trade on {temp_date.date()} since it's a holiday")
+            print(f"You cannot trade on {temp_date.date()} since it's a holiday", end = "\n\n")
             temp_date += datetime.timedelta(days = 1)
         return temp_date
 
 
-# def end_trade_date (start_date, add, df):
-#     import pandas as pd
-#     return pass 
+def days_to_prorate (df, start, end):
+    pass
 
-print(df.Date)
-print(start_trade_date("2018-01-06", df))
+start = trade_date("2018-01-01", df)
+end = trade_date("2018-01-06", df)
 
+start_idx = list(df.Date).index(start) + 1
+end_idx = list(df.Date).index(end) + 1
+print(end_idx - start_idx)

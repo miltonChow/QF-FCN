@@ -82,12 +82,16 @@ def trade_date(given_date, df):
         return temp_date
 
 
-def days_to_prorate (df, start, end):
-    pass
+def days_to_prorate (df, start = "2018-01-01", end = "2018-01-06"):
+    import pandas as pd
+    import datetime as datetime
+    start, end = trade_date(start, df), trade_date(end,df)
+    start_idx, end_idx = list(df.Date).index(start) + 1, list(df.Date).index(end) + 1
+    if end_idx - start_idx > 0:
+        print(f"Your first trade date is set to be {start.date()}")
+        print(f"Your last trade date is set to be {end.date()}")
+        return end_idx - start_idx
+    else:
+        return ValueError
 
-start = trade_date("2018-01-01", df)
-end = trade_date("2018-01-06", df)
-
-start_idx = list(df.Date).index(start) + 1
-end_idx = list(df.Date).index(end) + 1
-print(end_idx - start_idx)
+print(days_to_prorate(df, "2018-01-06", "2018-01-05"))

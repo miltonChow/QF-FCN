@@ -54,7 +54,7 @@ df.reset_index(inplace = True)
 df.index += 1 # Forces the index to start from `1`
 # print(df.info(verbose = True))
 
-
+print(df.Date)
 #Function works! 
 # Function will find the next trading day that is returned in the dataframe
 # def next_trade_date(start_date, add, df):
@@ -94,4 +94,6 @@ def days_to_prorate (df, start = "2018-01-01", end = "2018-01-06"):
     else:
         return ValueError
 
-print(days_to_prorate(df, "2018-01-06", "2018-01-05"))
+
+print(days_to_prorate(df, "2018-01-01", "2018-12-25"))
+

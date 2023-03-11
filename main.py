@@ -18,7 +18,7 @@ also pay interest to investors at regular intervals
 
 We need the following variables:
 1. Strike price (K)
-2. Knock-out level (KO) - higher bound
+2. Knock-out level (KO)/ call level - higher bound
 3. Knock-in level (KI) - lower bound = for soft protection
 4. Maturity date = contract comes to an end
 5. Observation interval = coupon/ interest pay out date
@@ -54,7 +54,8 @@ df.reset_index(inplace = True)
 df.index += 1 # Forces the index to start from `1`
 # print(df.info(verbose = True))
 
-print(df.Date)
+# print(df.Date)
+
 #Function works! 
 # Function will find the next trading day that is returned in the dataframe
 # def next_trade_date(start_date, add, df):
@@ -69,7 +70,7 @@ print(df.Date)
 #     return end_date
 
 #Both start and end trade dates will start here
-def trade_date(given_date, df):
+def trade_date(df, given_date):
     import pandas as pd
     import datetime as datetime
     temp_date = pd.to_datetime(given_date)
@@ -85,18 +86,43 @@ def trade_date(given_date, df):
 def days_to_prorate (df, start = "2018-01-01", end = "2018-01-06"):
     import pandas as pd
     import datetime as datetime
-    start, end = trade_date(start, df), trade_date(end,df)
+    start, end = trade_date(df, start), trade_date(df, end)
     start_idx, end_idx = list(df.Date).index(start) + 1, list(df.Date).index(end) + 1
+    print(f"Your first trade date is set to be {start.date()}")
+    print(f"Your last trade date is set to be {end.date()}")
     if end_idx - start_idx > 0:
-        print(f"Your first trade date is set to be {start.date()}")
-        print(f"Your last trade date is set to be {end.date()}")
-        return end_idx - start_idx
+        return (end_idx - start_idx, start_idx, end_idx)
     else:
         return ValueError
 
 
 # print(days_to_prorate(df, "2018-01-01", "2018-12-25"))
 
-def trying:
-    pass
 
+'''
+Setting up our Pricing model
+
+'''
+
+# tenor period : months 
+# strike = 95% of spot
+# knock out, call level = 98% 
+# Inital capital: 200k 
+
+#No knock in barrier
+def FCN_pricing (df, inital_spot, initial_date, period = 1, tenor = 6, coupon = 0.05, call = 0.98, strike = 0.95 ):
+    initial_date = trade_date(df, initial_date).date()
+    due_date = initial_date + datetime.timedelta(days = tenor * 30)
+    # print(initial_date)
+    due_date = trade_date(df, due_date).date()
+    # print(due_date)
+    prorate =  days_to_prorate(df, start = initial_date, end = due_date)[0]
+    if period == 1:
+        pass
+
+print(FCN_pricing(df, 100, initial_date = "2021-01-01"))
+
+for i in range (757, 883, (883-757)//6):
+    print(i)
+
+ 

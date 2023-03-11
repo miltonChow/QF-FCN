@@ -95,9 +95,8 @@ def days_to_prorate (df, start = "2018-01-01", end = "2018-01-06"):
         return ValueError
 
 
-# print(days_to_prorate(df, "2018-01-01", "2018-12-25")) 
+# print(days_to_prorate(df, "2018-01-01", "2018-12-25"))
 
-# Tenor = Max 12 months (3-6 months is usually the norm)
-# Knock in barrier = to ensure 100% normial is returned (下限保護機制)
-
+def trying:
+    pass
 
